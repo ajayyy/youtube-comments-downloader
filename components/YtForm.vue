@@ -113,7 +113,6 @@
     VBtn,
     VForm,
     VImg,
-    VProgressCircular,
     VTextField
   } from 'vuetify'
 
@@ -124,7 +123,6 @@
       VBtn,
       VForm,
       VImg,
-      VProgressCircular,
       VTextField
     },
     data () {

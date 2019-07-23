@@ -13,26 +13,26 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@nuxtjs/axios": "^5.0.0",
-    "@nuxtjs/google-analytics": "^2.0.2",
+    "@nuxtjs/axios": "^5.5.4",
+    "@nuxtjs/google-analytics": "^2.2.0",
     "@nuxtjs/pwa": "^2.6.0",
     "cross-env": "^5.2.0",
-    "lazysizes": "^4.0.2",
-    "nuxt": "^2.0.0",
-    "raven-js": "^3.26.4",
+    "lazysizes": "^5.1.0",
+    "nuxt": "^2.8.1",
+    "raven-js": "^3.27.2",
     "remove-accents": "^0.4.2",
     "striptags": "^3.1.1",
-    "vue-timeago": "^3.4.4",
-    "vuetify": "^1.0.14"
+    "vue-timeago": "^5.1.2",
+    "vuetify": "^1.5.16"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.1",
-    "babel-plugin-transform-imports": "^1.5.1",
-    "eslint": "^5.0.1",
-    "eslint-loader": "^2.0.0",
-    "eslint-plugin-vue": "^4.0.0",
-    "nodemon": "^1.11.0",
+    "babel-eslint": "^10.0.2",
+    "babel-plugin-transform-imports": "^2.0.0",
+    "eslint": "^6.1.0",
+    "eslint-loader": "^2.2.1",
+    "eslint-plugin-vue": "^5.2.3",
+    "nodemon": "^1.19.1",
     "stylus": "^0.54.5",
-    "stylus-loader": "^3.0.1"
+    "stylus-loader": "^3.0.2"
   }
 }
