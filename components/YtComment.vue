@@ -19,7 +19,7 @@
         </span>
 
         <span class="comment__time">
-          <timeago :since="comment.date"/>
+          <timeago :datetime="comment.date"/>
         </span>
       </div>
 
