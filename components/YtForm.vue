@@ -176,6 +176,8 @@
     methods: {
       async updateVideoId (event) {
         this.$store.commit('resetErrors')
+        this.$store.commit('resetComments')
+        this.$store.commit('resetVideo')
 
         const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
         const match = this.videoId.match(checkPattern)

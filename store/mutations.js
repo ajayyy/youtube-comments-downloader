@@ -12,6 +12,9 @@ export default {
     state.commentsCount = 0
     state.search = ''
   },
+  resetVideo (state) {
+    state.video = false
+  },
   resetAll (state) {
     state.commentList = []
     state.comments = {}
