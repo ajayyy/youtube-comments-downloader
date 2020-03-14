@@ -1,6 +1,37 @@
 <template>
   <v-app class="white">
     <v-content>
+      <v-toolbar
+        app
+      >
+        <v-toolbar-items>
+          <v-btn
+            to="/"
+            flat
+          >
+            Home
+          </v-btn>
+          <v-btn
+            to="settings"
+            flat
+          >
+            Settings
+          </v-btn>
+          <v-btn
+            to="privacy-policy"
+            flat
+          >
+            Privacy policy
+          </v-btn>
+          <v-btn
+            to="terms-of-service"
+            flat
+          >
+            Terms of service
+          </v-btn>
+        </v-toolbar-items>
+      </v-toolbar>
+
       <v-container grid-list-xl>
         <v-layout>
           <v-flex
@@ -12,57 +43,20 @@
           </v-flex>
         </v-layout>
       </v-container>
-
-      <v-footer
-        absolute
-        height="auto"
-      >
-        <v-container>
-          <v-layout justify-center>
-            <v-flex shrink>
-              <v-btn
-                to="/"
-                flat
-                round
-              >
-                Home
-              </v-btn>
-            </v-flex>
-            <v-flex shrink>
-              <v-btn
-                to="privacy-policy"
-                flat
-                round
-              >
-                Privacy policy
-              </v-btn>
-            </v-flex>
-            <v-flex shrink>
-              <v-btn
-                to="terms-of-service"
-                flat
-                round
-              >
-                Terms of service
-              </v-btn>
-            </v-flex>
-          </v-layout>
-        </v-container>
-      </v-footer>
     </v-content>
   </v-app>
 </template>
 
 <script>
   import * as VGrid from 'vuetify/es5/components/VGrid'
+  import * as VToolbar from 'vuetify/es5/components/VToolbar'
   import VBtn from 'vuetify/es5/components/VBtn'
-  import VFooter from 'vuetify/es5/components/VFooter'
 
   export default {
     components: {
       ...VGrid,
-      VBtn,
-      VFooter
+      ...VToolbar,
+      VBtn
     }
   }
 </script>

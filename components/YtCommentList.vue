@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-4">
+  <div class="my-4">
     <template v-if="loading">
       <div class="text-xs-center">
         {{ commentsCount }} comments fetched...
@@ -38,7 +38,7 @@
         v-if="commentsCount > breakpoint"
         class="text-xs-center"
       >
-        <v-divider class="my-3"/>
+        <v-divider class="my-3" />
         <p>
           For videos with more than {{ breakpoint }} comments pagination is enabled, to prevent browsers crashes and keep render times in reasonable limits.
         </p>
@@ -49,15 +49,15 @@
           :total-visible="7"
           color="red"
         />
-        <v-divider class="my-3"/>
+        <v-divider class="my-3" />
       </div>
 
       <v-card flat>
         <ul class="comment-list pa-4">
           <yt-comment
             v-for="comment in comments"
-            :comment="comment"
             :key="comment.id"
+            :comment="comment"
           />
         </ul>
       </v-card>
@@ -66,7 +66,7 @@
         v-if="commentsCount > breakpoint"
         class="text-xs-center"
       >
-        <v-divider class="my-3"/>
+        <v-divider class="my-3" />
         <v-pagination
           v-model="page"
           :length="length"
@@ -155,4 +155,3 @@
     margin: 0;
   }
 </style>
-

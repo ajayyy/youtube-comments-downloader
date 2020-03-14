@@ -19,7 +19,7 @@
         </span>
 
         <span class="comment__time">
-          <timeago :datetime="comment.date"/>
+          <timeago :datetime="comment.date" />
         </span>
       </div>
 
@@ -45,7 +45,9 @@
           flat
           icon
         >
-          <v-icon size="16px">thumb_up</v-icon>
+          <v-icon size="16px">
+            thumb_up
+          </v-icon>
         </v-btn>
 
         <v-btn
@@ -53,7 +55,9 @@
           flat
           icon
         >
-          <v-icon size="16px">thumb_down</v-icon>
+          <v-icon size="16px">
+            thumb_down
+          </v-icon>
         </v-btn>
       </div>
 
@@ -68,7 +72,6 @@
           :is-child="true"
         />
       </div>
-
     </div>
   </li>
 </template>

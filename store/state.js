@@ -1,14 +1,14 @@
 export default {
-  api: {
-    url: 'https://www.googleapis.com/youtube/v3/',
-    key: 'AIzaSyAyYPux1VOpcbKk2V_FKt3nPxfz6lu437k'
+  apiKey: {
+    default: 'AIzaSyAyYPux1VOpcbKk2V_FKt3nPxfz6lu437k',
+    local: window.localStorage.getItem('apiKeyLocal') || ''
   },
-  loading: false,
-  error: false,
-  videoId: '',
-  video: false,
-  comments: {},
   commentList: [],
+  comments: {},
   commentsCount: 0,
-  search: ''
+  error: false,
+  loading: false,
+  search: '',
+  video: false,
+  videoId: ''
 }

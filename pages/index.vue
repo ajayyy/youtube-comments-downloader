@@ -13,6 +13,9 @@
     components: {
       YtCommentList,
       YtForm
+    },
+    mounted() {
+      this.$store.commit('resetAll')
     }
   }
 </script>

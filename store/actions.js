@@ -1,22 +1,42 @@
-import request from '../api'
+import axios from 'axios'
 
 export default {
-  async getVideo (context) {
-    const url = new URL(context.state.api.url + 'videos')
+  async request({ state, commit }, { url, params }) {
+    try {
+      const { data } = await axios({
+        baseURL: 'https://www.googleapis.com/youtube/v3/',
+        url,
+        params: {
+          key: state.apiKey.local || state.apiKey.default,
+          ...params
+        }
+      })
+
+      return data
+    }
+    catch(error) {
+      commit('error', error.response.data.error.errors)
+    }
+  },
+  async getVideo ({ state, commit, dispatch }) {
+    if (!state.videoId) {
+      return
+    }
+
     const params = {
-      key: context.state.api.key,
-      id: context.state.videoId,
+      id: state.videoId,
       part: 'snippet,statistics'
     }
 
-    const response = await request(url, params)
-    context.commit('video', response.items[0])
+    const response = await dispatch('request', { url: 'videos', params })
+
+    if (response) {
+      commit('video', response.items[0])
+    }
   },
-  async getCommentThreads (context, pageToken) {
-    const url = new URL(context.state.api.url + 'commentThreads')
+  async getCommentThreads ({ state, commit, dispatch }, pageToken) {
     const params = {
-      key: context.state.api.key,
-      videoId: context.state.videoId,
+      videoId: state.videoId,
       part: 'snippet,replies',
       maxResults: 100
     }
@@ -25,38 +45,28 @@ export default {
       params.pageToken = pageToken
     }
 
-    try {
-      const response = await request(url, params)
+    const response = await dispatch('request', { url: 'commentThreads', params })
 
-      response.items.forEach(comment => {
-        context.commit('comment', comment)
-      })
+    response.items.forEach(comment => {
+      commit('comment', comment)
+    })
 
-      const promises = []
+    const promises = []
 
-      promises.push(
-        ...response.items
-          .filter(comment => comment.snippet.totalReplyCount > 0)
-          .map(comment => context.dispatch('getComments', comment.snippet.topLevelComment.id))
-      )
+    promises.push(
+      ...response.items
+        .filter(comment => comment.snippet.totalReplyCount > 0)
+        .map(comment => dispatch('getComments', comment.snippet.topLevelComment.id))
+    )
 
-      if (response.nextPageToken) {
-        promises.push(context.dispatch('getCommentThreads', response.nextPageToken))
-      }
-
-      await Promise.all(promises)
-    } catch (error) {
-      context.state.error = {
-        videoId: params.videoId,
-        pageToken: pageToken || false,
-        ...error
-      }
+    if (response.nextPageToken) {
+      promises.push(dispatch('getCommentThreads', response.nextPageToken))
     }
+
+    await Promise.all(promises)
   },
-  async getComments (context, commentId, pageToken) {
-    const url = new URL(context.state.api.url + 'comments')
+  async getComments ({ state, commit, dispatch }, commentId, pageToken) {
     const params = {
-      key: context.state.api.key,
       parentId: commentId,
       part: 'snippet',
       maxResults: 100
@@ -66,23 +76,14 @@ export default {
       params.pageToken = pageToken
     }
 
-    try {
-      const response = await request(url, params)
+    const response = await dispatch('request', { url: 'comments', params })
 
-      response.items.forEach(reply => {
-        context.commit('commentReply', { commentId, reply })
-      })
+    response.items.forEach(reply => {
+      commit('commentReply', { commentId, reply })
+    })
 
-      if (response.nextPageToken) {
-        await context.dispatch('getComments', response.nextPageToken)
-      }
-    } catch (error) {
-      context.state.error = {
-        videoId: params.videoId,
-        commentId,
-        pageToken: pageToken || false,
-        ...error
-      }
+    if (response.nextPageToken) {
+      await dispatch('getComments', response.nextPageToken)
     }
   }
 }

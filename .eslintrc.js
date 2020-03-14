@@ -1,8 +1,7 @@
 module.exports = {
   root: true,
   env: {
-    browser: true,
-    node: true
+    browser: true
   },
   parserOptions: {
     parser: 'babel-eslint'
@@ -15,5 +14,7 @@ module.exports = {
     'vue'
   ],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'vue/no-v-html': 0
+  }
 }

@@ -1,4 +1,5 @@
 module.exports = {
+  mode: 'spa',
   head: {
     title: 'Youtube Comments Downloader',
     meta: [
@@ -22,13 +23,10 @@ module.exports = {
     '~/plugins/vuetify'
   ],
   modules: [
-    // '@nuxtjs/axios',
+    '@nuxtjs/axios',
     '@nuxtjs/google-analytics',
     '@nuxtjs/pwa'
   ],
-  axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-  },
   'google-analytics': {
     id: 'UA-76217107-2'
   },

@@ -12,7 +12,7 @@
           <v-card-text>
             <v-text-field
               id="video-id"
-              v-model="input"
+              v-model="videoId"
               type="text"
               label="Youtube video URL or ID"
               color="red"
@@ -66,40 +66,64 @@
               </span>
             </v-btn>
           </v-card-actions>
-
         </v-card>
       </v-flex>
     </v-layout>
 
-    <div
-      v-if="error"
-      class="form__error"
-    >
-      <img src="https://media.giphy.com/media/13NRvWtOiMXawM/giphy.gif">
-
-      <div
-        v-for="(item, index) in error.errors"
-        :key="index"
-        :item="item"
+    <template v-if="error">
+      <v-alert
+        v-for="(item, index) in error"
+        :key="`error-${index}`"
+        type="error"
+        :value="true"
       >
-        <p>
-          Domain:
-          <strong>
-            {{ item.domain }}
-          </strong>
-        </p>
-        <p>
-          Message:
-          <strong v-html="item.message" />
-        </p>
-        <p>
-          Reason:
-          <strong>
-            {{ item.reason }}
-          </strong>
-        </p>
-      </div>
-    </div>
+        <template v-if="item.reason === 'ipRefererBlocked'">
+          You can't use this API key on other domains.
+        </template>
+        <template v-else-if="item.reason === 'dailyLimitExceeded'">
+          Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT).
+        </template>
+        <template v-else-if="item.reason === 'keyInvalid' && apiKey.local">
+          Provided API key is invalid.
+          <v-btn to="/settings">
+            Open settings
+          </v-btn>
+        </template>
+        <template v-else>
+          <p
+            v-for="key in Object.keys(item)"
+            :key="key"
+          >
+            {{ key }}:
+            <strong>
+              {{ item[key] }}
+            </strong>
+          </p>
+        </template>
+      </v-alert>
+
+      <template v-if="!apiKey.local">
+        <v-alert
+          v-for="(item, index) in error.filter(error => error.reason === 'dailyLimitExceeded')"
+          :key="`info-${index}`"
+          type="info"
+          :value="true"
+        >
+          You can use your own API key to avoid being limited by other users usage
+
+          <v-btn
+            href="https://developers.google.com/youtube/registering_an_application"
+            target="_blank"
+            rel="noopener"
+          >
+            How to get own API key
+          </v-btn>
+          <v-btn to="/settings">
+            Open settings
+          </v-btn>
+        </v-alert>
+      </template>
+    </template>
   </v-form>
 </template>
 
@@ -113,7 +137,8 @@
     VBtn,
     VForm,
     VImg,
-    VTextField
+    VTextField,
+    VAlert
   } from 'vuetify'
 
   export default {
@@ -123,17 +148,19 @@
       VBtn,
       VForm,
       VImg,
-      VTextField
+      VTextField,
+      VAlert
     },
     data () {
       return {
-        input: ''
+        videoId: ''
       }
     },
     computed: mapState([
       'error',
       'loading',
-      'video'
+      'video',
+      'apiKey'
     ]),
     mounted () {
       if (process.browser) {
@@ -141,29 +168,22 @@
         const url = new URL(href)
 
         if (url.searchParams.get('v')) {
-          this.input = url.searchParams.get('v')
+          this.videoId = url.searchParams.get('v')
           this.updateVideoId()
         }
       }
     },
     methods: {
       async updateVideoId (event) {
-        this.$store.commit('reset')
+        this.$store.commit('resetErrors')
 
         const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
-        const match = this.input.match(checkPattern)
+        const match = this.videoId.match(checkPattern)
 
-        this.$store.commit(
-          'videoId',
-          match && match[1] ? match[1] : ''
-        )
+        this.$store.commit('videoId', match && match[1] ? match[1] : '')
 
         if (match && match[1]) {
-          window.history.pushState(
-            {},
-            '',
-            `/?v=${match[1]}`
-          )
+          window.history.pushState({}, '', `/?v=${match[1]}`)
         } else {
           window.history.pushState({}, '', '/')
         }
@@ -172,7 +192,7 @@
       },
       async onSubmit () {
         this.$store.commit('loading', true)
-        this.$store.commit('reset')
+        this.$store.commit('resetComments')
         await this.$store.dispatch('getCommentThreads')
         this.$store.commit('loading', false)
       }
