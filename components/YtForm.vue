@@ -51,13 +51,15 @@
             </div>
           </v-card-text>
 
-          <v-card-actions class="px-0">
+          <v-card-actions
+            v-if="!commentsCount || loading"
+            class="px-0"
+          >
             <v-btn
-              :loading="loading"
-              :disabled="loading"
+              :loading="!!loading"
+              :disabled="!!loading"
               type="submit"
               color="primary"
-              dark
               block
             >
               Fetch comments
@@ -160,7 +162,8 @@
       'error',
       'loading',
       'video',
-      'apiKey'
+      'apiKey',
+      'commentsCount'
     ]),
     mounted () {
       if (process.browser) {
@@ -195,7 +198,15 @@
         this.$store.commit('loading', true)
         this.$store.commit('resetComments')
         await this.$store.dispatch('getCommentThreads')
-        this.$store.commit('loading', false)
+
+        this.$store.commit(
+          'loading',
+          'Rendering comments, please wait. It may take some serious amount of time, depends on your hardware and number of comments.'
+        )
+
+        setTimeout(() => {
+          this.$store.commit('loading', false)
+        }, 2000)
       }
     }
   }

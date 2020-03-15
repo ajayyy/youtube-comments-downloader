@@ -5,6 +5,10 @@
         {{ commentsCount }} comments fetched...
       </div>
 
+      <div v-if="typeof loading === 'string'">
+        {{ loading }}
+      </div>
+
       <v-progress-linear
         v-model="progress"
       />
