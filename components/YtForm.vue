@@ -32,7 +32,7 @@
       >
         <v-card flat>
           <v-img
-            :src="video.snippet.thumbnails.standard.url"
+            :src="video.snippet.thumbnails.high && video.snippet.thumbnails.high.url"
             height="200px"
           />
 
@@ -179,18 +179,17 @@
         this.$store.commit('resetComments')
         this.$store.commit('resetVideo')
 
-        const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
+        const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
         const match = this.videoId.match(checkPattern)
-        console.log({match})
-        this.$store.commit('videoId', match && match[1] ? match[1] : '')
 
         if (match && match[1]) {
+          this.$store.commit('videoId', match[1])
+          await this.$store.dispatch('getVideo')
           window.history.pushState({}, '', `/?v=${match[1]}`)
         } else {
+          this.$store.commit('videoId', '')
           window.history.pushState({}, '', '/')
         }
-
-        await this.$store.dispatch('getVideo')
       },
       async onSubmit () {
         this.$store.commit('loading', true)
