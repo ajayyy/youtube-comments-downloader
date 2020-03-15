@@ -1,4 +1,10 @@
+const packageJson = require('./package.json')
+
 module.exports = {
+  env: {
+    name: packageJson.name,
+    version: packageJson.version
+  },
   mode: 'spa',
   head: {
     title: 'Youtube Comments Downloader',

@@ -7,5 +7,5 @@ Sentry.init({
   integrations: [
     new Integrations.Vue({ Vue, attachProps: true })
   ],
-  release: 'youtube-comments-downloader@' + process.env.npm_package_version
+  release: `${process.env.name}@${process.env.version}`
 });
