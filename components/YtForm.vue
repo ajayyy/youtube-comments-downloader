@@ -1,82 +1,72 @@
 <template>
   <div>
-    <v-layout
-      row
-      justify-center
-      mt-3
-    >
-      <v-flex
-        md8
-      >
-        <h1 class="title mb-3">
-          Paste YouTube URL or video ID to get comments
-        </h1>
-        <v-text-field
-          id="video-id"
-          v-model="videoIdInput"
-          label="Youtube video URL or ID"
-          outline
-          clearable
-          @input="updateVideoId"
-        />
+    <h1 class="title mb-3">
+      Paste YouTube URL or video ID to get comments
+    </h1>
+    <v-text-field
+      id="video-id"
+      v-model="videoIdInput"
+      label="Youtube video URL or ID"
+      outline
+      clearable
+      @input="updateVideoId"
+    />
 
-        <template v-if="!settings.uploadsPlaylistId">
-          <div class="d-flex">
-            Set channel name in setting to see here your latest videos
-            <v-btn
-              to="/settings"
-              color="primary"
-              round
-              flat
-              outline
-            >
-              Open settings
-            </v-btn>
-          </div>
-
-          <v-divider class="my-3" />
-        </template>
-
-        <template v-if="video">
-          <h3>
-            {{ video.snippet.title }}
-          </h3>
-          <div>
-            {{ video.snippet.channelTitle }}
-          </div>
-          <div>
-            {{ video.statistics.commentCount }} comments
-          </div>
-        </template>
-
-        <template v-else-if="previousVideos.length && !settings.uploadsPlaylistId">
-          Previous videos:
-          <yt-videos-list :videos="reverseArray(previousVideos)" />
-        </template>
-
-        <template v-else-if="settings.uploadsPlaylistId">
-          Latest {{ settings.username }} channel videos:
-          <yt-videos-list :videos="channelVideos" />
-        </template>
-
+    <template v-if="!settings.uploadsPlaylistId">
+      <div class="d-flex promo">
+        Set channel name in setting to see here your latest videos
         <v-btn
-          v-if="!commentsCount || loading"
-          :loading="!!loading"
-          :disabled="!!loading || !video"
-          type="submit"
+          to="/settings"
           color="primary"
-          large
-          block
-          :to="`/comments/${videoId}`"
-          @click="saveVideo"
+          round
+          flat
+          outline
         >
-          Get comments
-          <span slot="loader">
-            Loading...
-          </span>
+          Open settings
         </v-btn>
-      </v-flex>
-    </v-layout>
+      </div>
+
+      <v-divider class="my-3" />
+    </template>
+
+    <template v-if="video">
+      <h3>
+        {{ video.snippet.title }}
+      </h3>
+      <div>
+        {{ video.snippet.channelTitle }}
+      </div>
+      <div>
+        {{ video.statistics.commentCount }} comments
+      </div>
+    </template>
+
+    <template v-else-if="previousVideos.length && !settings.uploadsPlaylistId">
+      Previous videos:
+      <yt-videos-list :videos="reverseArray(previousVideos)" />
+    </template>
+
+    <template v-else-if="settings.uploadsPlaylistId">
+      Latest {{ settings.username }} channel videos:
+      <yt-videos-list :videos="channelVideos" />
+    </template>
+
+    <v-btn
+      v-if="!commentsCount || loading"
+      :loading="!!loading"
+      :disabled="!!loading || !video"
+      type="submit"
+      color="primary"
+      large
+      block
+      :to="`/comments/${videoId}`"
+      @click="saveVideo"
+    >
+      Get comments
+      <span slot="loader">
+        Loading...
+      </span>
+    </v-btn>
 
     <template v-if="error">
       <v-alert
@@ -232,3 +222,21 @@
     }
   }
 </script>
+
+<style>
+  .promo {
+    flex-direction: column;
+  }
+
+  @media (min-width: 450px) {
+    .promo {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .promo a {
+      flex: 0 0 auto !important;
+    }
+  }
+</style>

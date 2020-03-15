@@ -50,8 +50,10 @@
         <v-layout>
           <v-flex
             xs12
-            md8
-            offset-md2
+            md10
+            lg8
+            offset-md1
+            offset-lg2
           >
             <nuxt />
           </v-flex>
