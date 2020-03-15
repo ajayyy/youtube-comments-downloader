@@ -30,9 +30,11 @@ export default {
 
     const response = await dispatch('request', { url: 'videos', params })
 
-    if (response) {
-      commit('video', response.items[0])
+    if (!response) {
+      return
     }
+
+    commit('video', response.items[0])
   },
   async getCommentThreads ({ state, commit, dispatch }, pageToken) {
     const params = {
@@ -46,6 +48,10 @@ export default {
     }
 
     const response = await dispatch('request', { url: 'commentThreads', params })
+
+    if (!response) {
+      return
+    }
 
     response.items.forEach(comment => {
       commit('comment', comment)
@@ -77,6 +83,10 @@ export default {
     }
 
     const response = await dispatch('request', { url: 'comments', params })
+
+    if (!response) {
+      return
+    }
 
     response.items.forEach(reply => {
       commit('commentReply', { commentId, reply })
