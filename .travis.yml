@@ -14,4 +14,4 @@ deploy:
   token: "$FIREBASE_TOKEN"
   skip_cleanup: true
   on:
-    tags: true
+    branch: master
