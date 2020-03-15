@@ -1,7 +1,10 @@
+const settings = JSON.parse(window.localStorage.getItem('settings')) || {}
+
 export default {
-  apiKey: {
-    default: 'AIzaSyAyYPux1VOpcbKk2V_FKt3nPxfz6lu437k',
-    local: window.localStorage.getItem('apiKeyLocal') || ''
+  settings: {
+    apiKey: settings.apiKey || '',
+    username: settings.username || '',
+    uploadsPlaylistId: settings.uploadsPlaylistId || ''
   },
   commentList: [],
   comments: {},
@@ -10,5 +13,6 @@ export default {
   loading: false,
   search: '',
   video: false,
-  videoId: ''
+  videoId: '',
+  channelVideos: []
 }

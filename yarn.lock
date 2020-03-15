@@ -8004,7 +8004,7 @@ vue@^2.6.11:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.11.tgz#76594d877d4b12234406e84e35275c6d514125c5"
   integrity sha512-VfPwgcGABbGAue9+sfrD4PuwFar7gPb1yl1UK1MwXoQPAw0BKSqWfoYCT/ThFrdEVWoI51dBuyCoiNU9bZDZxQ==
 
-vuetify@^1.5.16:
+vuetify@^1.5.24:
   version "1.5.24"
   resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-1.5.24.tgz#d5cf6e7289570d5d05f8832a097cd435d36d37df"
   integrity sha512-guFOgEgZ8VpSgNXOv1QL2fOliaJBoiyNnf+bBqcXsnIppJGRlW1wyT6Ux7ZlQyphSHs+UK1aJNUjcyAtoOiHWg==

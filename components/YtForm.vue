@@ -1,74 +1,80 @@
 <template>
-  <v-form @submit.prevent="onSubmit">
+  <div>
     <v-layout
       row
-      wrap
+      justify-center
+      mt-3
     >
       <v-flex
-        :class="{ 'md6': video }"
-        d-flex
+        md8
       >
-        <v-card flat>
-          <v-card-text>
-            <v-text-field
-              id="video-id"
-              v-model="videoId"
-              type="text"
-              label="Youtube video URL or ID"
-              @input="updateVideoId"
-            />
+        <h1 class="title mb-3">
+          Paste YouTube URL or video ID to get comments
+        </h1>
+        <v-text-field
+          id="video-id"
+          v-model="videoIdInput"
+          label="Youtube video URL or ID"
+          outline
+          clearable
+          @input="updateVideoId"
+        />
 
-            <p class="grey--text">
-              Copy and paste YouTube URL or video ID to fetch all comments.
-            </p>
-          </v-card-text>
-        </v-card>
-      </v-flex>
+        <template v-if="video">
+          <h3>
+            {{ video.snippet.title }}
+          </h3>
+          <div>
+            {{ video.snippet.channelTitle }}
+          </div>
+          <div>
+            {{ video.statistics.commentCount }} comments
+          </div>
+        </template>
 
-      <v-flex
-        v-if="video"
-        md6
-        d-flex
-      >
-        <v-card flat>
-          <v-img
-            :src="video.snippet.thumbnails.high && video.snippet.thumbnails.high.url"
-            height="200px"
-          />
-
-          <v-card-title class="px-0 py-2">
-            <h3 class="title mb-0">
-              {{ video.snippet.title }}
-            </h3>
-          </v-card-title>
-
-          <v-card-text class="pa-0">
-            <div>
-              {{ video.snippet.channelTitle }}
-            </div>
-            <div>
-              {{ video.statistics.commentCount }} comments
-            </div>
-          </v-card-text>
-
-          <v-card-actions
-            v-if="!commentsCount || loading"
-            class="px-0"
-          >
+        <template v-else-if="previousVideos.length && !settings.uploadsPlaylistId">
+          <div class="d-flex">
+            Set channel name in setting to see here your latest videos
             <v-btn
-              :loading="!!loading"
-              :disabled="!!loading"
-              type="submit"
+              to="/settings"
               color="primary"
-              block
+              round
+              flat
+              outline
             >
-              Fetch comments
-              <span slot="loader">
-                Loading...
-              </span>
+              Open settings
             </v-btn>
-          </v-card-actions>
-        </v-card>
+          </div>
+
+          <v-divider class="my-3" />
+
+          <div>
+            Previous videos:
+          </div>
+          <yt-videos-list :videos="reverseArray(previousVideos)" />
+        </template>
+
+        <template v-else-if="settings.uploadsPlaylistId">
+          Latest {{ settings.username }} channel videos:
+          <yt-videos-list :videos="channelVideos" />
+        </template>
+
+        <v-btn
+          v-if="!commentsCount || loading"
+          :loading="!!loading"
+          :disabled="!!loading || !video"
+          type="submit"
+          color="primary"
+          large
+          block
+          :to="`/comments/${videoId}`"
+          @click="saveVideo"
+        >
+          Get comments
+          <span slot="loader">
+            Loading...
+          </span>
+        </v-btn>
       </v-flex>
     </v-layout>
 
@@ -85,7 +91,7 @@
         <template v-else-if="item.reason === 'dailyLimitExceeded'">
           Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT).
         </template>
-        <template v-else-if="item.reason === 'keyInvalid' && apiKey.local">
+        <template v-else-if="item.reason === 'keyInvalid' && settings.apiKey">
           Provided API key is invalid.
           <v-btn to="/settings">
             Open settings
@@ -104,14 +110,14 @@
         </template>
       </v-alert>
 
-      <template v-if="!apiKey.local">
+      <template v-if="!settings.apiKey">
         <v-alert
           v-for="(item, index) in error.filter(error => error.reason === 'dailyLimitExceeded')"
           :key="`info-${index}`"
           type="info"
           :value="true"
         >
-          You can use your own API key to avoid being limited by other users usage
+          You can use your own API key to avoid being limited by other users usage.
 
           <v-btn
             href="https://developers.google.com/youtube/registering_an_application"
@@ -126,87 +132,102 @@
         </v-alert>
       </template>
     </template>
-  </v-form>
+  </div>
 </template>
 
 <script>
   import { mapState } from 'vuex'
 
   import * as VGrid from 'vuetify/es5/components/VGrid'
-  import * as VCard from 'vuetify/es5/components/VCard'
+
+  import YtVideosList from './YtVideosList'
 
   import {
     VBtn,
-    VForm,
-    VImg,
     VTextField,
-    VAlert
+    VAlert,
+    VDivider
   } from 'vuetify'
 
   export default {
     components: {
-      ...VCard,
       ...VGrid,
       VBtn,
-      VForm,
-      VImg,
       VTextField,
-      VAlert
+      VAlert,
+      VDivider,
+      YtVideosList
     },
-    data () {
+    data() {
       return {
-        videoId: ''
+        videoIdInput: '',
+        previousVideos: []
       }
     },
     computed: mapState([
       'error',
       'loading',
       'video',
-      'apiKey',
-      'commentsCount'
+      'videoId',
+      'settings',
+      'commentsCount',
+      'channelVideos'
     ]),
-    mounted () {
-      if (process.browser) {
-        const href = window.location.href
-        const url = new URL(href)
-
-        if (url.searchParams.get('v')) {
-          this.videoId = url.searchParams.get('v')
-          this.updateVideoId()
+    watch: {
+      videoId() {
+        if (!this.videoIdInput || !this.videoIdInput.includes(this.videoId)) {
+          this.videoIdInput = this.videoId
         }
+
+        this.updateVideoId()
       }
     },
+    async created() {
+      this.updatePreviousVideos()
+      await this.$store.dispatch('getChannelVideos')
+    },
     methods: {
-      async updateVideoId (event) {
+      reverseArray(array) {
+        return [...array].reverse()
+      },
+      updatePreviousVideos() {
+        this.previousVideos = JSON.parse(localStorage.getItem('previous-videos')) || []
+      },
+      async updateVideoId() {
         this.$store.commit('resetErrors')
         this.$store.commit('resetComments')
         this.$store.commit('resetVideo')
 
-        const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
-        const match = this.videoId.match(checkPattern)
-
-        if (match && match[1]) {
-          this.$store.commit('videoId', match[1])
-          await this.$store.dispatch('getVideo')
-          window.history.pushState({}, '', `/?v=${match[1]}`)
-        } else {
-          this.$store.commit('videoId', '')
-          window.history.pushState({}, '', '/')
+        if (!this.videoIdInput) {
+          return
         }
+
+        const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
+        const match = this.videoIdInput.match(checkPattern)
+
+        if (!match || !match[1]) {
+          return
+        }
+
+        this.$store.commit('videoId', match[1])
+        await this.$store.dispatch('getVideo')
       },
-      async onSubmit () {
-        this.$store.commit('loading', true)
-        this.$store.commit('resetComments')
-        await this.$store.dispatch('getCommentThreads')
+      saveVideo() {
+        this.updatePreviousVideos()
 
-        this.$store.commit(
-          'loading',
-          'Rendering comments, please wait. It may take some serious amount of time, depends on your hardware and number of comments.'
+        if (!this.previousVideos.find(({ id }) => id === this.videoId )) {
+          this.previousVideos.push({
+            id: this.videoId,
+            title: this.video.snippet.title
+          })
+        }
+
+        this.previousVideos = this.previousVideos.slice(-4)
+
+        localStorage.setItem(
+          'previous-videos',
+          JSON.stringify(this.previousVideos)
         )
-
-        setTimeout(() => {
-          this.$store.commit('loading', false)
-        }, 2000)
       }
     }
   }

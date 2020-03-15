@@ -7,7 +7,7 @@ export default {
         baseURL: 'https://www.googleapis.com/youtube/v3/',
         url,
         params: {
-          key: state.apiKey.local || state.apiKey.default,
+          key: state.settings.apiKey || 'AIzaSyAyYPux1VOpcbKk2V_FKt3nPxfz6lu437k',
           ...params
         }
       })
@@ -35,6 +35,45 @@ export default {
     }
 
     commit('video', response.items[0])
+  },
+  async getChannelUploadsPlaylistId({ state, commit, dispatch }) {
+    if (!state.settings.username) {
+      return
+    }
+
+    const params = {
+      forUsername: state.settings.username,
+      part: 'contentDetails'
+    }
+
+    const response = await dispatch('request', { url: 'channels', params })
+
+    if (!response || !response.items[0]) {
+      return
+    }
+
+    commit('settings', {
+      key: 'uploadsPlaylistId',
+      value: response.items[0].contentDetails.relatedPlaylists.uploads
+    })
+  },
+  async getChannelVideos({ state, commit, dispatch }) {
+    if (!state.settings.uploadsPlaylistId) {
+      return
+    }
+
+    const params = {
+      playlistId: state.settings.uploadsPlaylistId,
+      part: 'contentDetails,snippet'
+    }
+
+    const response = await dispatch('request', { url: 'playlistItems', params })
+
+    if (!response || !response.items) {
+      return
+    }
+
+    commit('channelVideos', response.items)
   },
   async getCommentThreads ({ state, commit, dispatch }, pageToken) {
     const params = {

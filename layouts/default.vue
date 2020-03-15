@@ -31,12 +31,14 @@
         <v-btn
           to="/"
           flat
+          small
         >
           Home
         </v-btn>
         <v-btn
-          to="settings"
+          to="/settings"
           flat
+          small
         >
           Settings
         </v-btn>
@@ -65,18 +67,20 @@
         <v-layout justify-center>
           <v-flex shrink>
             <v-btn
-              to="privacy-policy"
+              to="/privacy-policy"
               flat
               round
+              small
             >
               Privacy policy
             </v-btn>
           </v-flex>
           <v-flex shrink>
             <v-btn
-              to="terms-of-service"
+              to="/terms-of-service"
               flat
               round
+              small
             >
               Terms of service
             </v-btn>

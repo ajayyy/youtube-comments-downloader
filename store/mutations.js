@@ -3,19 +3,19 @@ import striptags from 'striptags'
 import removeAccents from 'remove-accents'
 
 export default {
-  resetErrors (state) {
+  resetErrors(state) {
     state.error = false
   },
-  resetComments (state) {
+  resetComments(state) {
     state.commentList = []
     state.comments = {}
     state.commentsCount = 0
     state.search = ''
   },
-  resetVideo (state) {
+  resetVideo(state) {
     state.video = false
   },
-  resetAll (state) {
+  resetAll(state) {
     state.commentList = []
     state.comments = {}
     state.commentsCount = 0
@@ -25,25 +25,31 @@ export default {
     state.video = false
     state.videoId = ''
   },
-  search (state, value) {
+  search(state, value) {
     state.search = value
   },
-  videoId (state, id) {
+  videoId(state, id) {
     state.videoId = id
   },
-  video (state, video) {
+  video(state, video) {
     state.video = video
   },
-  loading (state, loading) {
+  loading(state, loading) {
     state.loading = loading
   },
-  error (state, error) {
+  error(state, error) {
     state.error = error
   },
-  apiKeyLocal(state, key) {
-    state.apiKey.local = key
+  settings(state, {key, value}) {
+    Vue.set(state.settings, key, value)
   },
-  comment (state, comment) {
+  channelVideos(state, videos) {
+    state.channelVideos = videos.map(video => ({
+      id: video.contentDetails.videoId,
+      title: video.snippet.title
+    }))
+  },
+  comment(state, comment) {
     const data = comment.snippet.topLevelComment
 
     state.commentsCount++
@@ -61,7 +67,7 @@ export default {
       replyList: []
     })
   },
-  commentReply (state, payload) {
+  commentReply(state, payload) {
     const data = payload.reply.snippet
     const id = payload.reply.id.replace(data.parentId + '.', '')
 
