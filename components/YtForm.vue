@@ -15,7 +15,6 @@
               v-model="videoId"
               type="text"
               label="Youtube video URL or ID"
-              color="red"
               @input="updateVideoId"
             />
 
@@ -57,7 +56,8 @@
               :loading="loading"
               :disabled="loading"
               type="submit"
-              color="red white--text mx-0"
+              color="primary"
+              dark
               block
             >
               Fetch comments
@@ -181,7 +181,7 @@
 
         const checkPattern = /(?:youtube(?:-nocookie)?\.com\/(?:[^/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)?([a-zA-Z0-9_-]{11})/
         const match = this.videoId.match(checkPattern)
-
+        console.log({match})
         this.$store.commit('videoId', match && match[1] ? match[1] : '')
 
         if (match && match[1]) {

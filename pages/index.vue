@@ -14,7 +14,7 @@
       YtCommentList,
       YtForm
     },
-    mounted() {
+    beforeMount() {
       this.$store.commit('resetAll')
     }
   }

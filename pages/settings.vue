@@ -18,6 +18,7 @@
       <v-flex xs12>
         <v-btn
           color="primary"
+          dark
           class="ma-0"
           @click="save"
         >

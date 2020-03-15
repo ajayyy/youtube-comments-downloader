@@ -7,7 +7,6 @@
 
       <v-progress-linear
         v-model="progress"
-        color="red"
       />
     </template>
 
@@ -20,7 +19,6 @@
           v-model="search"
           label="Search in comments"
           type="search"
-          color="red"
           clearable
         />
         <p class="pb-4 grey--text">
@@ -47,7 +45,6 @@
           v-model="page"
           :length="length"
           :total-visible="7"
-          color="red"
         />
         <v-divider class="my-3" />
       </div>
@@ -71,7 +68,6 @@
           v-model="page"
           :length="length"
           :total-visible="7"
-          color="red"
         />
       </div>
     </template>
