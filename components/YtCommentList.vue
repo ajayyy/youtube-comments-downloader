@@ -2,16 +2,20 @@
   <div class="my-4">
     <template v-if="loading">
       <div class="text-xs-center">
-        {{ commentsCount }} comments fetched...
+        <template v-if="loading === 'rendering'">
+          <div class="title">
+            Rendering comments, please wait...
+          </div>
+          <div>
+            It may take some serious amount of time, depends on your hardware and number of comments.
+          </div>
+        </template>
+        <template v-else>
+          {{ commentsCount }} comments fetched...
+        </template>
       </div>
 
-      <div v-if="typeof loading === 'string'">
-        {{ loading }}
-      </div>
-
-      <v-progress-linear
-        v-model="progress"
-      />
+      <v-progress-linear indeterminate />
     </template>
 
     <template v-if="commentsCount && !loading">
@@ -26,13 +30,7 @@
           clearable
         />
         <p class="pb-4 grey--text">
-          The search will return threads that contain given phrase
-          <span
-            class="grey--text text--lighten-1"
-            style="float: right"
-          >
-            BETA FEATURE
-          </span>
+          Search will return threads that contain given phrase
         </p>
       </v-card>
 
@@ -107,12 +105,6 @@
       }
     },
     computed: {
-      progress () {
-        if (this.video) {
-          return this.commentsCount / this.video.statistics.commentCount * 100
-        }
-        return 0
-      },
       allComments () {
         if (this.search) {
           return this.$store.getters.commentsWithText(this.search)
