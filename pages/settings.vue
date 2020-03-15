@@ -125,11 +125,23 @@
     computed: mapState(['settings']),
     methods: {
       async save() {
+        this.loading = true
+        this.messages = []
+
         this.$store.commit('settings', this.settings)
         const localSettings = JSON.parse(window.localStorage.getItem('settings')) || {}
 
-        if (localSettings.username) {
+        if (this.settings.username) {
           await this.$store.dispatch('getChannelUploadsPlaylistId')
+
+          if (!this.settings.uploadsPlaylistId) {
+            this.messages.push({ type:'error', message: 'Channel with this name not exist.' })
+            this.loading = false
+            return
+          }
+        }
+        else {
+          this.$store.commit('settings', { key: 'uploadsPlaylistId', value: '' })
         }
 
         window.localStorage.setItem('settings', JSON.stringify(this.settings))
@@ -139,6 +151,8 @@
         setTimeout(() => {
           this.messages.shift()
         }, 10000);
+
+        this.loading = false
       }
     }
   }

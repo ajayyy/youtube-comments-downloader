@@ -49,6 +49,7 @@ export default {
     const response = await dispatch('request', { url: 'channels', params })
 
     if (!response || !response.items[0]) {
+      commit('settings', { key: 'uploadsPlaylistId', value: '' })
       return
     }
 

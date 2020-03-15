@@ -20,19 +20,7 @@
           @input="updateVideoId"
         />
 
-        <template v-if="video">
-          <h3>
-            {{ video.snippet.title }}
-          </h3>
-          <div>
-            {{ video.snippet.channelTitle }}
-          </div>
-          <div>
-            {{ video.statistics.commentCount }} comments
-          </div>
-        </template>
-
-        <template v-else-if="previousVideos.length && !settings.uploadsPlaylistId">
+        <template v-if="!settings.uploadsPlaylistId">
           <div class="d-flex">
             Set channel name in setting to see here your latest videos
             <v-btn
@@ -47,10 +35,22 @@
           </div>
 
           <v-divider class="my-3" />
+        </template>
 
+        <template v-if="video">
+          <h3>
+            {{ video.snippet.title }}
+          </h3>
           <div>
-            Previous videos:
+            {{ video.snippet.channelTitle }}
           </div>
+          <div>
+            {{ video.statistics.commentCount }} comments
+          </div>
+        </template>
+
+        <template v-else-if="previousVideos.length && !settings.uploadsPlaylistId">
+          Previous videos:
           <yt-videos-list :videos="reverseArray(previousVideos)" />
         </template>
 
