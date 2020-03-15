@@ -36,6 +36,17 @@ module.exports = {
   'google-analytics': {
     id: 'UA-76217107-2'
   },
+  pwa: {
+    manifest: {
+      name: 'Youtube Comments Downloader',
+      short_name: 'Comments',
+      background_color: '#009688',
+      theme_color: '#009688'
+    },
+    meta: {
+      theme_color: '#009688'
+    }
+  },
   build: {
     extractCSS: true,
     transpile: [/^vuetify/],

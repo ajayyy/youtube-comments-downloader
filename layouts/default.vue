@@ -9,9 +9,21 @@
       <v-toolbar-title>
         <nuxt-link
           to="/"
-          class="white--text font-weight-thin"
+          class="logo"
         >
-          Youtube Comments Downloader
+          <v-img
+            src="/logo.svg"
+            height="40"
+            width="40"
+          />
+          <span>
+            <div>
+              Comments
+            </div>
+            <div>
+              Downloader
+            </div>
+          </span>
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />
@@ -80,13 +92,15 @@
   import * as VToolbar from 'vuetify/es5/components/VToolbar'
   import VBtn from 'vuetify/es5/components/VBtn'
   import VFooter from 'vuetify/es5/components/VFooter'
+  import VImg from 'vuetify/es5/components/VImg'
 
   export default {
     components: {
       ...VGrid,
       ...VToolbar,
       VBtn,
-      VFooter
+      VFooter,
+      VImg
     }
   }
 </script>
@@ -97,7 +111,18 @@
     -webkit-font-smoothing: auto !important;
   }
 
-  .v-toolbar a {
+  .logo {
+    display: flex;
+    align-items: center;
+    color: white;
     text-decoration: none;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .logo .v-image {
+    margin-right: 5px;
   }
 </style>
