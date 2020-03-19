@@ -1,10 +1,6 @@
 const packageJson = require('./package.json')
 
 module.exports = {
-  env: {
-    name: packageJson.name,
-    version: packageJson.version
-  },
   mode: 'spa',
   head: {
     title: 'Youtube Comments Downloader',
@@ -22,16 +18,16 @@ module.exports = {
     'vuetify/src/stylus/app.styl'
   ],
   plugins: [
-    { src: '~/plugins/hotjar', ssr: false },
-    { src: '~/plugins/lazysizes', ssr: false },
-    { src: '~/plugins/sentry', ssr: false },
+    { src: '~/plugins/hotjar', mode: 'client' },
+    { src: '~/plugins/lazysizes', mode: 'client' },
     '~/plugins/vue-timeago',
     '~/plugins/vuetify'
   ],
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/google-analytics',
-    '@nuxtjs/pwa'
+    '@nuxtjs/pwa',
+    '@nuxtjs/sentry'
   ],
   'google-analytics': {
     id: 'UA-76217107-2'
@@ -45,6 +41,12 @@ module.exports = {
     },
     meta: {
       theme_color: '#009688'
+    }
+  },
+  sentry: {
+    dsn: 'https://b65ddccb9c594cbcb1d6a114d7d9d5c4@sentry.io/152451',
+    config: {
+      release: `${packageJson.name}@${packageJson.version}`
     }
   },
   build: {
