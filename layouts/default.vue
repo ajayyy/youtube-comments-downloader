@@ -131,4 +131,11 @@
   .logo .v-image {
     margin-right: 5px;
   }
+
+  @media print {
+    .v-toolbar,
+    .v-footer {
+      display: none;
+    }
+  }
 </style>

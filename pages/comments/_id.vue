@@ -3,7 +3,7 @@
     <v-btn
       to="/"
       color="primary"
-      class="mx-0 pl-2"
+      class="mx-0 pl-2 back"
       outline
       round
     >
@@ -46,3 +46,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  @media print {
+    .back {
+      display: none;
+    }
+  }
+</style>

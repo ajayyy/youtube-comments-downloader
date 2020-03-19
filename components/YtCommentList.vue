@@ -20,7 +20,7 @@
 
     <template v-if="commentsCount && !loading">
       <v-card
-        class="mb-4 px-4 pt-2"
+        class="mb-4 px-4 pt-2 search"
         raised
       >
         <v-text-field
@@ -145,5 +145,11 @@
     list-style: none;
     padding: 0;
     margin: 0;
+  }
+
+  @media print {
+    .search {
+      display: none;
+    }
   }
 </style>
