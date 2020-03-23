@@ -63,9 +63,14 @@ module.exports = {
         }]
       ]
     },
-    extend(config, ctx) {
+    extend(config, { isDev, isClient }) {
+      // Sourcemaps
+      if (isClient) {
+        config.devtool = 'source-map'
+      }
+
       // Run ESLint on save
-      if (ctx.isDev && ctx.isClient) {
+      if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
           test: /\.(js|vue)$/,
