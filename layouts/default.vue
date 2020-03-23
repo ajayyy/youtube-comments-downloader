@@ -16,14 +16,17 @@
             height="40"
             width="40"
           />
-          <span>
+          <h1>
+            <div>
+              Youtube
+            </div>
             <div>
               Comments
             </div>
             <div>
               Downloader
             </div>
-          </span>
+          </h1>
         </nuxt-link>
       </v-toolbar-title>
       <v-spacer />
@@ -120,16 +123,16 @@
   .logo {
     display: flex;
     align-items: center;
-    color: white;
     text-decoration: none;
+  }
+
+  .logo h1 {
+    margin-left: 10px;
     font-size: 10px;
     line-height: 1;
     font-weight: 400;
+    color: white;
     text-transform: uppercase;
-  }
-
-  .logo .v-image {
-    margin-right: 5px;
   }
 
   @media print {
