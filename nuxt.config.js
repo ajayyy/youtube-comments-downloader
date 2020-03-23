@@ -27,6 +27,7 @@ module.exports = {
     '@nuxtjs/axios',
     '@nuxtjs/google-analytics',
     '@nuxtjs/pwa',
+    '@nuxtjs/robots',
     '@nuxtjs/sentry'
   ],
   'google-analytics': {
