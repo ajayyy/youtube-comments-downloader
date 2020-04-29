@@ -14,9 +14,9 @@ jobs:
     - run: yarn --frozen-lockfile
     - run: yarn lint
     - run: yarn generate
-
-    - name: GitHub Action for Firebase
-      uses: w9jds/firebase-action@v1.3.0
+    - uses: w9jds/firebase-action@master
+      with:
+        args: deploy --only hosting
       env:
-        FIREBASE_TOKEN: ${{ secrets.$FIREBASE_TOKEN }}
-        PROJECT_ID: 'comments-downloader'
+        FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        PROJECT_ID: comments-downloader
