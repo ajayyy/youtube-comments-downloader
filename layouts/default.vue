@@ -65,7 +65,6 @@
     </v-content>
 
     <v-footer
-      app
       height="auto"
     >
       <v-container pa-1>
