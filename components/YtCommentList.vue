@@ -24,7 +24,7 @@
         raised
       >
         <v-text-field
-          v-model="search"
+          v-debounce:100ms="updateSearch"
           label="Search in comments"
           type="search"
           clearable
@@ -106,7 +106,7 @@
     },
     computed: {
       allComments () {
-        if (this.search) {
+        if (this.search.length > 0) {
           return this.$store.getters.commentsWithText(this.search)
         }
         return this.$store.getters.comments()
@@ -123,19 +123,17 @@
       length () {
         return Math.ceil(this.allComments.length / this.perPage)
       },
-      search: {
-        get () {
-          return this.$store.state.search
-        },
-        set (value) {
-          this.$store.commit('search', value)
-        }
-      },
       ...mapState([
         'commentsCount',
         'loading',
-        'video'
+        'video',
+        'search'
       ])
+    },
+    methods: {
+      updateSearch(value) {
+        this.$store.commit('search', value)
+      }
     }
   }
 </script>

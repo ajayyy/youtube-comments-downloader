@@ -21,7 +21,8 @@ module.exports = {
     { src: '~/plugins/hotjar', mode: 'client' },
     { src: '~/plugins/lazysizes', mode: 'client' },
     '~/plugins/vue-timeago',
-    '~/plugins/vuetify'
+    '~/plugins/vuetify',
+    '~/plugins/vue-debounce'
   ],
   modules: [
     '@nuxtjs/axios',

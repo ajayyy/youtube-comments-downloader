@@ -1,6 +1,8 @@
 import striptags from 'striptags'
 import removeAccents from 'remove-accents'
 
+import pregQuote from '~/helpers/preg-quote'
+
 export default {
   comments: state => (threads = state.threadList) => {
     return threads
@@ -27,7 +29,7 @@ export default {
               text: state.comments[id].searchText
             }
           })
-          .filter(comment => comment.text.search(new RegExp(text, 'i')) >= 0)
+          .filter(comment => comment.text.search(new RegExp(pregQuote(text), 'i')) >= 0)
           .map(comment => comment.parent ? comment.parent : comment.id)
       )
     ])

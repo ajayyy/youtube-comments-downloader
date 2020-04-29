@@ -83,6 +83,8 @@
     VIcon
   } from 'vuetify'
 
+  import pregQuote from '~/helpers/preg-quote'
+
   export default {
     name: 'YtComment',
     components: {
@@ -117,10 +119,20 @@
         return this.$store.state.search
       },
       text () {
+        const text = this.comment.text
         if (this.search) {
-          return this.comment.text.replace(new RegExp(this.search, 'ig'), '<mark>$&</mark>')
+          const start = this.comment.searchText.search(new RegExp(pregQuote(this.search), 'ig'))
+          const end = start + this.search.length
+
+          // Return full text if no match found
+          if (start === -1) {
+            return text
+          }
+
+          return text.slice(0, start) + '<mark>' + text.slice(start, end) + '</mark>' + text.slice(end)
         }
-        return this.comment.text
+
+        return text
       }
     }
   }

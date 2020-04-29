@@ -26,7 +26,7 @@ export default {
     state.videoId = ''
   },
   search(state, value) {
-    state.search = value
+    state.search = removeAccents(striptags(value))
   },
   videoId(state, id) {
     state.videoId = id
