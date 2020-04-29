@@ -1,6 +1,6 @@
 {
   "name": "youtube-comments-downloader",
-  "version": "3.3.3",
+  "version": "3.3.4",
   "description": "A tool for Youtubers to help them working with thousands of comments",
   "author": "Bartek Igielski <igloczek@gmail.com>",
   "private": true,
