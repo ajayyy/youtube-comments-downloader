@@ -78,7 +78,7 @@
         <template v-if="item.reason === 'ipRefererBlocked'">
           You can't use this API key on other domains.
         </template>
-        <template v-else-if="item.reason === 'dailyLimitExceeded'">
+        <template v-else-if="item.reason === 'dailyLimitExceeded' || item.reason === 'quotaExceeded'">
           Daily Limit Exceeded. The quota will be reset at midnight Pacific Time (PT).
         </template>
         <template v-else-if="item.reason === 'keyInvalid' && settings.apiKey">
@@ -93,16 +93,14 @@
             :key="key"
           >
             {{ key }}:
-            <strong>
-              {{ item[key] }}
-            </strong>
+            <strong v-html="item[key]" />
           </p>
         </template>
       </v-alert>
 
       <template v-if="!settings.apiKey">
         <v-alert
-          v-for="(item, index) in error.filter(error => error.reason === 'dailyLimitExceeded')"
+          v-for="(item, index) in error.filter(error => error.reason === 'dailyLimitExceeded' || error.reason === 'quotaExceeded')"
           :key="`info-${index}`"
           type="info"
           :value="true"
