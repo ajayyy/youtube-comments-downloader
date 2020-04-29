@@ -7,7 +7,7 @@ export default {
     state.error = false
   },
   resetComments(state) {
-    state.commentList = []
+    state.threadList = []
     state.comments = {}
     state.commentsCount = 0
     state.search = ''
@@ -16,7 +16,7 @@ export default {
     state.video = false
   },
   resetAll(state) {
-    state.commentList = []
+    state.threadList = []
     state.comments = {}
     state.commentsCount = 0
     state.error = false
@@ -49,11 +49,8 @@ export default {
       title: video.snippet.title
     }))
   },
-  comment(state, comment) {
+  thread(state, comment) {
     const data = comment.snippet.topLevelComment
-
-    state.commentsCount++
-    state.commentList.push(data.id)
 
     Vue.set(state.comments, data.id, {
       name: data.snippet.authorDisplayName,
@@ -62,27 +59,41 @@ export default {
       date: data.snippet.publishedAt,
       likes: data.snippet.likeCount,
       text: data.snippet.textDisplay,
-      searchText: removeAccents(striptags(data.snippet.textDisplay)),
       totalReplyCount: comment.snippet.totalReplyCount,
       replyList: []
     })
-  },
-  commentReply(state, payload) {
-    const data = payload.reply.snippet
-    const id = payload.reply.id.replace(data.parentId + '.', '')
 
+    state.threadList.push(data.id)
     state.commentsCount++
-    state.comments[data.parentId].replyList.push(id)
+  },
+  commentReply(state, { commentId, reply }) {
+    // Omit replies if parent comment not exist
+    if (!state.comments[commentId]) {
+      return
+    }
 
-    Vue.set(state.comments, id, {
-      parent: data.parentId,
+    const data = reply.snippet
+
+    Vue.set(state.comments, reply.id, {
+      parent: commentId,
       name: data.authorDisplayName,
       avatar: data.authorProfileImageUrl,
       channel: data.authorChannelUrl,
       date: data.publishedAt,
       likes: data.likeCount,
-      text: data.textDisplay,
-      searchText: removeAccents(striptags(data.textDisplay))
+      text: data.textDisplay
+    })
+
+    state.comments[commentId].replyList.push(reply.id)
+    state.commentsCount++
+  },
+  generateSearchText(state) {
+    Object.keys(state.comments).forEach(id => {
+      Vue.set(
+        state.comments[id],
+        'searchText',
+        removeAccents(striptags(state.comments[id].text))
+      )
     })
   }
 }

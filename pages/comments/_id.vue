@@ -42,6 +42,7 @@ export default {
 
     setTimeout(() => {
       this.$store.commit('loading', false)
+      this.$store.commit('generateSearchText')
     }, 1000)
   }
 }

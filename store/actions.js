@@ -93,11 +93,15 @@ export default {
       return
     }
 
-    response.items.forEach(comment => {
-      commit('comment', comment)
+    response.items.forEach(thread => {
+      commit('thread', thread)
     })
 
     const promises = []
+
+    if (response.nextPageToken) {
+      promises.push(dispatch('getCommentThreads', response.nextPageToken))
+    }
 
     promises.push(
       ...response.items
@@ -105,13 +109,9 @@ export default {
         .map(comment => dispatch('getComments', comment.snippet.topLevelComment.id))
     )
 
-    if (response.nextPageToken) {
-      promises.push(dispatch('getCommentThreads', response.nextPageToken))
-    }
-
     await Promise.all(promises)
   },
-  async getComments ({ state, commit, dispatch }, commentId, pageToken) {
+  async getComments ({ commit, dispatch }, commentId, pageToken) {
     const params = {
       parentId: commentId,
       part: 'snippet',

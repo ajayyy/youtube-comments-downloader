@@ -6,7 +6,7 @@ export default {
     username: settings.username || '',
     uploadsPlaylistId: settings.uploadsPlaylistId || ''
   },
-  commentList: [],
+  threadList: [],
   comments: {},
   commentsCount: 0,
   error: false,

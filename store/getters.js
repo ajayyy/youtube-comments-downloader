@@ -1,6 +1,9 @@
+import striptags from 'striptags'
+import removeAccents from 'remove-accents'
+
 export default {
-  comments: state => (comments = state.commentList) => {
-    return comments
+  comments: state => (threads = state.threadList) => {
+    return threads
       .map(commentId => {
         return {
           ...state.comments[commentId],
@@ -12,6 +15,8 @@ export default {
       .sort((a, b) => b.likes - a.likes)
   },
   commentsWithText: (state, getters) => text => {
+    text = removeAccents(striptags(text))
+
     return getters.comments([
       ...new Set(
         Object.keys(state.comments)
